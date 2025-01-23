@@ -1,0 +1,101 @@
+from transformers import pipeline
+
+pipe = pipeline("text-classification")
+pipe(["This restaurant is awesome", "This restaurant is awful"])
+[{'label': 'POSITIVE', 'score': 0.9998743534088135},
+ {'label': 'NEGATIVE', 'score': 0.9996669292449951}]
+
+from transformers import pipeline
+
+oracle = pipeline(model="deepset/roberta-base-squad2")
+oracle(question="What is my name ?", context="My name is Rahul and I live in Banglore")
+##{'score': 0.9191, 'start': 34, 'end': 40, 'answer': 'Berlin'}
+
+from transformers import pipeline
+
+transcriber = pipeline(model="openai/whisper-base")
+transcriber("https://huggingface.co/datasets/Narsil/asr_dummy/resolve/main/1.flac")
+
+from transformers import pipeline
+import torch
+
+depth_estimator = pipeline(task="depth-estimation", model="LiheYoung/depth-anything-base-hf")
+output = depth_estimator("/content/img.jfif")
+# This is a tensor with the values being the depth expressed in meters for each pixel
+output["predicted_depth"].shape
+torch.Size([1, 384, 384])
+
+from PIL import Image
+import requests
+
+from transformers import pipeline
+
+upscaler = pipeline("image-to-image", model="caidas/swin2SR-classical-sr-x2-64")
+img = Image.open(requests.get("http://images.cocodataset.org/val2017/000000039769.jpg", stream=True).raw)
+img = img.resize((164, 64))
+upscaled_img = upscaler(img)
+img.size
+
+upscaled_img.size
+
+display(img)
+
+from transformers import pipeline
+
+detector = pipeline(model="facebook/detr-resnet-50")
+detector("https://huggingface.co/datasets/Narsil/image_dummy/raw/main/parrots.png")
+
+# x, y  are expressed relative to the top left hand corner.
+
+from transformers import pipeline
+
+fill_masker = pipeline(model="google-bert/bert-base-uncased")
+fill_masker("This is a simple [MASK].")
+
+# use bart in pytorch
+summarizer = pipeline("summarization")
+summarizer("An apple a day, keeps the doctor away", min_length=5, max_length=20)
+
+# use t5 in tf
+summarizer = pipeline("summarization", model="google-t5/t5-base", tokenizer="google-t5/t5-base", framework="tf")
+summarizer("An apple a day, keeps the doctor away", min_length=5, max_length=20)
+
+from transformers import pipeline
+
+oracle = pipeline(model="google/tapas-base-finetuned-wtq")
+table = {
+    "Repository": ["Transformers", "Datasets", "Tokenizers"],
+    "Stars": ["36542", "4512", "3934"],
+    "Contributors": ["651", "77", "34"],
+    "Programming language": ["Python", "Python", "Rust, Python and NodeJS"],
+}
+oracle(query="How many stars does the transformers repository have?", table=table)
+
+from transformers import pipeline
+
+generator = pipeline(model="mrm8488/t5-base-finetuned-question-generation-ap")
+generator(
+    "answer: Manuel context: Manuel has created RuPERTa-base with the support of HF-Transformers and Google"
+)
+
+from transformers import pipeline
+
+extractor = pipeline(model="google/vit-base-patch16-224", task="image-feature-extraction")
+result = extractor("https://huggingface.co/datasets/Narsil/image_dummy/raw/main/parrots.png", return_tensors=True)
+result.shape  # This is a tensor of shape [1, sequence_lenth, hidden_dimension] representing the input image.
+
+from transformers import pipeline
+
+captioner = pipeline(model="ydshieh/vit-gpt2-coco-en")
+captioner("https://huggingface.co/datasets/Narsil/image_dummy/raw/main/parrots.png")
+
+from transformers import pipeline
+
+generator = pipeline(model="facebook/sam-vit-base", task="mask-generation")
+outputs = generator(
+    "http://images.cocodataset.org/val2017/000000039769.jpg",
+)
+
+outputs = generator(
+    "https://huggingface.co/datasets/Narsil/image_dummy/raw/main/parrots.png", points_per_batch=128
+)
